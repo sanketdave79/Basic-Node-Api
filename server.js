@@ -17,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;        // set our port
+var Bear     = require('./app/models/bear');
+var Restaurant = require('./app/models/restaurant');
 
 mongoose.connect('mongodb://localhost:27017/bears'); // connect to our database
 
@@ -27,9 +29,6 @@ db.once('open', function() {
 });
 
 
-
-
-var Bear     = require('./app/models/bear');
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -52,6 +51,28 @@ router.get('/', function(req, res) {
 
 // more routes for our API will happen here
 
+// on routes that end in /restaurants
+
+router.route('/restaurants')
+
+  // create a restaurant (accessed at POST http://localhost:8080/api/restaurants)
+    .post(function(req, res){
+
+var restaurant = new Restaurant();
+        restaurant.name = req.body.name;
+        restaurant.location = req.body.location;
+
+
+        restaurant.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Restaurant created!' });
+        });
+
+
+    });
+
 
 
 // on routes that end in /bears
@@ -60,10 +81,10 @@ router.route('/bears')
 
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
-        
         var bear = new Bear();      // create a new instance of the Bear model
         bear.name = req.body.name;  // set the bears name (comes from the request)
         bear.brand = req.body.brand; // set the bears brand (comes from the request)
+        bear.restaurant = req.body.restaurant; //set the restaurant (comes from the request)
 
         // save the bear and check for errors
         bear.save(function(err) {
