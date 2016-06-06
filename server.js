@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;        // set our port
 var Bear     = require('./app/models/bear');
 var Restaurant = require('./app/models/restaurant');
+var Customer = require('./app/models/customer');
 
 mongoose.connect('mongodb://localhost:27017/bears'); // connect to our database
 
@@ -71,12 +72,152 @@ var restaurant = new Restaurant();
         });
 
 
+    })
+    .get(function(req, res) {
+        Restaurant.find(function(err, restaurants) {
+            if (err)
+                res.send(err);
+
+            res.json(restaurants);
+        });
     });
 
 
 
-// on routes that end in /bears
+
+// on routes that end in /restaurants/:restaurant_id
 // ----------------------------------------------------
+router.route('/restaurants/:restaurant_id')
+
+    // get the restaurant with that id (accessed at GET http://localhost:8080/api/restaurants/:restaurant_id)
+    .get(function(req, res) {
+        Restaurant.findById(req.params.restaurant_id, function(err, restaurant) {
+            if (err)
+                res.send(err);
+            res.json(restaurant);
+        })
+    })
+
+    .put(function(req, res) {
+
+            // use our bear model to find the bear we want
+            Restaurant.findById(req.params.restaurant_id, function (err, restaurant) {
+
+                if (err)
+                    res.send(err);
+
+                Restaurant.name = req.body.name;  // update the Restaurant info
+
+                // save the bear
+                restaurant.save(function (err) {
+                    if (err)
+                        res.send(err);
+
+                    res.json({message: 'Restaurant updated!'});
+                });
+
+            });
+
+        })
+
+.delete(function(req, res) {
+    Restaurant.remove({
+        _id: req.params.restaurant_id
+    }, function (err, restaurant) {
+        if (err)
+            res.send(err);
+
+        res.json({message: 'Successfully deleted'});
+    });
+
+});
+
+
+
+
+
+// on routes that end in /customers
+
+router.route('/customers')
+
+    // create a bear (accessed at POST http://localhost:8080/api/bears)
+    .post(function(req, res) {
+        var customer = new Customer();      // create a new instance of the Bear model
+        customer.name = req.body.name;  // set the bears name (comes from the request)
+        customer.email = req.body.email; // set the bears brand (comes from the request)
+
+        // save the bear and check for errors
+        customer.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'New Customer created!' });
+        });
+
+    })
+
+    .get(function(req, res) {
+        Customer.find(function(err, customers) {
+            if (err)
+                res.send(err);
+
+            res.json(customers);
+        });
+    });
+
+
+// on routes that end in /customers/:customer_id
+router.route('/customers/:customer_id')
+
+    // get the restaurant with that id (accessed at GET http://localhost:8080/api/restaurants/:restaurant_id)
+    .get(function(req, res) {
+        Customer.findById(req.params.customer_id, function(err, customer) {
+            if (err)
+                res.send(err);
+            res.json(customer);
+        })
+    })
+
+    .put(function(req, res) {
+
+        // use our bear model to find the bear we want
+        Customer.findById(req.params.customer_id, function (err, customer) {
+
+            if (err)
+                res.send(err);
+
+            Customer.name = req.body.name;  // update the Customer Name
+            Customer.email = req.body.email; // update the Customer email
+
+            // save the bear
+            Customer.save(function (err) {
+                if (err)
+                    res.send(err);
+
+                res.json({message: 'Customer Details updated!'});
+            });
+
+        });
+
+    })
+
+    .delete(function(req, res) {
+        Customer.remove({
+            _id: req.params.customer_id
+        }, function (err, customer) {
+            if (err)
+                res.send(err);
+
+            res.json({message: 'Successfully deleted'});
+        });
+
+    });
+
+
+
+
+// on routes that end in /bears
+
 router.route('/bears')
 
     // create a bear (accessed at POST http://localhost:8080/api/bears)
@@ -85,7 +226,7 @@ router.route('/bears')
         bear.name = req.body.name;  // set the bears name (comes from the request)
         bear.brand = req.body.brand; // set the bears brand (comes from the request)
         bear.restaurant = req.body.restaurant; //set the restaurant (comes from the request)
-
+        bear.customer = req.body.customer; //set the customer (comes from the request)
         // save the bear and check for errors
         bear.save(function(err) {
             if (err)
@@ -123,22 +264,35 @@ router.route('/bears/:bear_id')
     .put(function(req, res) {
 
         // use our bear model to find the bear we want
-        Bear.findById(req.params.bear_id, function(err, bear) {
+        Bear.findById(req.params.bear_id, function (err, bear) {
 
             if (err)
                 res.send(err);
 
             bear.name = req.body.name;  // update the bears info
+            bear.customer = req.body.customer;  // update the bears info
 
             // save the bear
-            bear.save(function(err) {
+            bear.save(function (err) {
                 if (err)
                     res.send(err);
 
-                res.json({ message: 'Bear updated!' });
+                res.json({message: 'Bear updated!'});
             });
 
         });
+
+    })
+
+            .delete(function(req, res) {
+                Bear.remove({
+                    _id: req.params.bear_id
+                }, function(err, bear) {
+                    if (err)
+                        res.send(err);
+
+                    res.json({ message: 'Successfully deleted' });
+                });
 
     });
 
