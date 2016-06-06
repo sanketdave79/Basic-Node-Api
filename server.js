@@ -64,7 +64,7 @@ var restaurant = new Restaurant();
         restaurant.location = req.body.location;
 
 
-        restaurant.save(function(err) {
+        Restaurant.save(function(err) {
             if (err)
                 res.send(err);
 
@@ -106,10 +106,12 @@ router.route('/restaurants/:restaurant_id')
                 if (err)
                     res.send(err);
 
-                Restaurant.name = req.body.name;  // update the Restaurant info
-
-                // save the bear
-                restaurant.save(function (err) {
+                restaurant.name = req.body.name;  // update the Restaurant info
+                console.log('Restaurant Name:'+ restaurant.name);
+                restaurant.location = req.body.location; //update the restaurant info
+                console.log('Restaurant Location:'+ restaurant.location);
+                // save the restaurant
+                restaurant.save(function(err) {
                     if (err)
                         res.send(err);
 
@@ -186,11 +188,11 @@ router.route('/customers/:customer_id')
             if (err)
                 res.send(err);
 
-            Customer.name = req.body.name;  // update the Customer Name
-            Customer.email = req.body.email; // update the Customer email
+            customer.name = req.body.name;  // update the Customer Name
+            customer.email = req.body.email; // update the Customer email
 
             // save the bear
-            Customer.save(function (err) {
+            customer.save(function (err) {
                 if (err)
                     res.send(err);
 
