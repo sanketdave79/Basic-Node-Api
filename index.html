@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js">
+    </script>
+</head>
+<body ng-app="myeventsApp">
+<div ng-controller="EventsController" class="container">
+    <h1>Events</h1>
+    <hr/>
+    <div ng-repeat="event in events" class="col-md-6">
+
+        <h4>Brand:{{event.brand}}</h4>
+        <p>Restaurant:{{event.restaurant}}</p>
+    </div>
+</div>
+<script>
+    var myevents = angular.module('myeventsApp', []);
+
+myevents.controller("EventsController", function ($scope, $http) {
+
+    $http.get('http://localhost:8080/api/bears')
+            .success(function (data) {
+                console.log(data);
+                $scope.events = data;
+            });
+});
+
+</script>
+</body>
+</html>
