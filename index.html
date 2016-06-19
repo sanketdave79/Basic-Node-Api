@@ -6,25 +6,43 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js">
     </script>
 </head>
-<body ng-app="myeventsApp">
-<div ng-controller="EventsController" class="container">
-    <h1>Events</h1>
-    <hr/>
-    <div ng-repeat="event in events" class="col-md-6">
+<body ng-app="mybearsApp">
+<div ng-controller="BearsController" class="container">
 
-        <h4>Brand:{{event.brand}}</h4>
-        <p>Restaurant:{{event.restaurant}}</p>
+    <h1>Bears</h1>
+    <hr/>
+    <div ng-repeat="bear in bears" class="col-md-6">
+
+        <h4>Customer:{{bear.customer}}</h4>
+        <p>Brand:{{bear.brand}}</p>
+        <p>Restaurant:{{bear.restaurant}}</p>
     </div>
+    <form>
+        <fieldset class="form-group">
+            <label for="brand">Bear Brand</label>
+            <input type="text" class="form-control" id="brand" placeholder="Type Brand">
+            <small class="text-muted">Ale or Lager ! We know it ! </small>
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="customerSelect">Customer</label>
+            <select class="form-control" id="customerSelect">
+                <option>1</option>
+                <option>2</option>
+            </select>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 </div>
 <script>
-    var myevents = angular.module('myeventsApp', []);
+    var mybears = angular.module('mybearsApp', []);
 
-myevents.controller("EventsController", function ($scope, $http) {
+mybears.controller("BearsController", function ($scope, $http) {
 
     $http.get('http://localhost:8080/api/bears')
             .success(function (data) {
                 console.log(data);
-                $scope.events = data;
+                $scope.bears = data;
             });
 });
 

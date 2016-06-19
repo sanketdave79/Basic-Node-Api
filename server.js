@@ -9,12 +9,6 @@ var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 
-
-
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:63342');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -23,9 +17,17 @@ var allowCrossDomain = function(req, res, next) {
     next();
 }
 
+
+// configure app to use bodyParser()
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 app.use(allowCrossDomain);
 
 var port = process.env.PORT || 8080;        // set our port
+
+// models
 var Bear     = require('./app/models/bear');
 var Restaurant = require('./app/models/restaurant');
 var Customer = require('./app/models/customer');
@@ -50,14 +52,11 @@ app.get('/', function (req, res) {
 
 router.use(function(req, res, next) {
     // do logging
-    console.log('Something is happening.');
+    console.log('Actions taken !! ');
     next(); // make sure we go to the next routes and don't stop here
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
-});
+
 
 // more routes for our API will happen here
 
@@ -77,7 +76,7 @@ var restaurant = new Restaurant();
             if (err)
                 res.send(err);
 
-            res.json({ message: 'Restaurant created!' });
+            res.json({ message: 'New Restaurant created!' });
         });
 
 
@@ -138,7 +137,7 @@ router.route('/restaurants/:restaurant_id')
         if (err)
             res.send(err);
 
-        res.json({message: 'Successfully deleted'});
+        res.json({message: 'Restaurant Successfully deleted'});
     });
 
 });
@@ -151,7 +150,7 @@ router.route('/restaurants/:restaurant_id')
 
 router.route('/customers')
 
-    // create a bear (accessed at POST http://localhost:8080/api/bears)
+    // create a customer (accessed at POST http://localhost:8080/api/customers)
     .post(function(req, res) {
         var customer = new Customer();      // create a new instance of the Bear model
         customer.name = req.body.name;  // set the bears name (comes from the request)
@@ -180,7 +179,7 @@ router.route('/customers')
 // on routes that end in /customers/:customer_id
 router.route('/customers/:customer_id')
 
-    // get the restaurant with that id (accessed at GET http://localhost:8080/api/restaurants/:restaurant_id)
+    // get the customer with that id (accessed at GET http://localhost:8080/api/customers/:customer_id)
     .get(function(req, res) {
         Customer.findById(req.params.customer_id, function(err, customer) {
             if (err)
@@ -191,7 +190,7 @@ router.route('/customers/:customer_id')
 
     .put(function(req, res) {
 
-        // use our bear model to find the bear we want
+        // use our customer model to find the customer we want
         Customer.findById(req.params.customer_id, function (err, customer) {
 
             if (err)
@@ -200,7 +199,7 @@ router.route('/customers/:customer_id')
             customer.name = req.body.name;  // update the Customer Name
             customer.email = req.body.email; // update the Customer email
 
-            // save the bear
+            // save the customer
             customer.save(function (err) {
                 if (err)
                     res.send(err);
@@ -219,7 +218,7 @@ router.route('/customers/:customer_id')
             if (err)
                 res.send(err);
 
-            res.json({message: 'Successfully deleted'});
+            res.json({message: 'Customer Successfully deleted'});
         });
 
     });
@@ -302,12 +301,12 @@ router.route('/bears/:bear_id')
                     if (err)
                         res.send(err);
 
-                    res.json({ message: 'Successfully deleted' });
+                    res.json({ message: 'Bear Successfully deleted' });
                 });
 
     });
 
-// REGISTER OUR ROUTES -------------------------------
+
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
