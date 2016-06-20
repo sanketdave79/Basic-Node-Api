@@ -108,7 +108,7 @@ router.route('/restaurants/:restaurant_id')
 
     .put(function(req, res) {
 
-            // use our bear model to find the bear we want
+            // use our Restaurant model to find the Restaurant we want
             Restaurant.findById(req.params.restaurant_id, function (err, restaurant) {
 
                 if (err)
