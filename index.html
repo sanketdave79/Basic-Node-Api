@@ -5,47 +5,107 @@
           href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js">
     </script>
+    <script>
+        var mybears = angular.module('mybearsApp', []);
+
+        mybears.controller("BearsController", function ($scope, $http) {
+
+            $http.get('http://localhost:8080/api/bears')
+                    .success(function (data) {
+                        console.log(data);
+                        $scope.bears = data;
+                    });
+
+            $http.get('http://localhost:8080/api/customers')
+                    .success(function (data) {
+                        console.log(data);
+                        $scope.customers = data;
+                    });
+            $http.get('http://localhost:8080/api/restaurants')
+                    .success(function (data) {
+                        console.log(data);
+                        $scope.restaurants = data;
+                    });
+        });
+
+
+
+
+    </script>
 </head>
 <body ng-app="mybearsApp">
+<hr/>
 <div ng-controller="BearsController" class="container">
+    <div class="container">
+    <div class="col-md-6">
+        <div class = "panel panel-primary">
+            <div class = "panel-heading">
+                <h3 class = "panel-title">  <input placeholder="Search Bears" class="form-control" type="text" ng-model="test"></h3>
+            </div>
 
-    <h1>Bears</h1>
-    <hr/>
-    <div ng-repeat="bear in bears" class="col-md-6">
+            <div class = "panel-body">
+                <div class="table-responsive">
 
-        <h4>Customer:{{bear.customer}}</h4>
-        <p>Brand:{{bear.brand}}</p>
-        <p>Restaurant:{{bear.restaurant}}</p>
-    </div>
-    <form>
-        <fieldset class="form-group">
-            <label for="brand">Bear Brand</label>
-            <input type="text" class="form-control" id="brand" placeholder="Type Brand">
-            <small class="text-muted">Ale or Lager ! We know it ! </small>
-        </fieldset>
-        <fieldset class="form-group">
-            <label for="customerSelect">Customer</label>
-            <select class="form-control" id="customerSelect">
-                <option>1</option>
-                <option>2</option>
-            </select>
-        </fieldset>
+                <table class="table" ng-repeat="bear in bears | filter : test" >
+                    <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Brand</th>
+                        <th>Restaurant</th>
+                    </tr>
+                    </thead>
+<tr>
+                    <td class="success">{{bear.customer}}</td>
+                    <td class="success">{{bear.brand}}</td>
+                    <td class="success">{{bear.restaurant}}</td>
+</tr>
+                </table>
+                    </div>
+            </div>
+        </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+
+        </div>
+    <div class="col-md-6">
+
+        <div class = "panel panel-success">
+            <div class = "panel-heading">
+                <h3 class = "panel-title">Add New Bear</h3>
+            </div>
+
+            <div class = "panel-body">
+                <form>
+                    <fieldset class="form-group">
+                        <label for="brand">Bear Brand</label>
+                        <input type="text" class="form-control" id="brand" placeholder="Type Brand">
+                        <small class="text-muted">Ale or Lager ! We know it ! </small>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="customerSelect">Customer</label>
+                        <select class="form-control" id="customerSelect"  ng-value="customer.id">
+                            <option ng-repeat="customer in customers">{{customer.name}}</option>
+                        </select>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="restaurantSelect">Restaurant</label>
+                        <select class="form-control" id="restaurantSelect"  ng-value="restaurant.id">
+                            <option ng-repeat="restaurant in restaurants">{{restaurant.name}}</option>
+                        </select>
+                    </fieldset>
+
+                    <button type="submit" class="btn btn-success btn-lg"><span class="glyphicons glyphicons-usd">Sold Bear</span></button>
+                </form>
+            </div>
+        </div>
+
+
+
+
+        </div>
 </div>
-<script>
-    var mybears = angular.module('mybearsApp', []);
+</div>
 
-mybears.controller("BearsController", function ($scope, $http) {
 
-    $http.get('http://localhost:8080/api/bears')
-            .success(function (data) {
-                console.log(data);
-                $scope.bears = data;
-            });
-});
 
-</script>
 </body>
 </html>
