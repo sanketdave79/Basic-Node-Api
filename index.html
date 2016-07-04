@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet"
-          href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js">
     </script>
     <script>
@@ -12,21 +11,52 @@
 
             $http.get('http://localhost:8080/api/bears')
                     .success(function (data) {
-                        console.log(data);
+                        //console.log(data);
                         $scope.bears = data;
                     });
 
             $http.get('http://localhost:8080/api/customers')
                     .success(function (data) {
-                        console.log(data);
+                        //console.log(data);
                         $scope.customers = data;
                     });
             $http.get('http://localhost:8080/api/restaurants')
                     .success(function (data) {
-                        console.log(data);
+                        //console.log(data);
                         $scope.restaurants = data;
                     });
+
+            // Getting name of Restaurant
+            $scope.getRestaurantName = function($restaurantid) {
+                console.log($restaurantid[0]);
+                $http.get('http://localhost:8080/api/restaurants/'+$restaurantid[0], {
+                            params: { restaurant_id: $restaurantid[0] }
+                        })
+                        .success(function (data) {
+                            console.log(data);
+                            $scope.restaurantdetails = data;
+                        });
+
+            };
+
+            // Getting name of Customer
+
+            $scope.getCustomerName = function($customerid) {
+                console.log($customerid[0]);
+                $http.get('http://localhost:8080/api/customers/'+$customerid[0], {
+                            params: { customer_id: $customerid[0] }
+                        })
+                        .success(function (data) {
+                            console.log(data);
+                            $scope.customerdetails = data;
+                        });
+
+            };
+
         });
+
+
+
 
 
 
@@ -54,11 +84,11 @@
                         <th>Restaurant</th>
                     </tr>
                     </thead>
-<tr>
-                    <td class="success">{{bear.customer}}</td>
+                    <tr>
+                    <td class="success"><span ng-init="getCustomerName(bear.customer)">{{customerdetails.name}}</span></td>
                     <td class="success">{{bear.brand}}</td>
-                    <td class="success">{{bear.restaurant}}</td>
-</tr>
+                    <td class="success"><span ng-init="getRestaurantName(bear.restaurant)">{{restaurantdetails.name}}</span></td>
+                    </tr>
                 </table>
                     </div>
             </div>
