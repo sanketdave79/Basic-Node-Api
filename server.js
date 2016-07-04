@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:63342');
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -103,7 +103,7 @@ router.route('/restaurants/:restaurant_id')
             if (err)
                 res.send(err);
             res.json(restaurant);
-        })
+        });
     })
 
     .put(function(req, res) {
@@ -251,7 +251,6 @@ router.route('/bears')
         Bear.find(function(err, bears) {
             if (err)
                 res.send(err);
-
             res.json(bears);
         });
     });
